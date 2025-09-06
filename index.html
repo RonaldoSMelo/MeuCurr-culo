@@ -400,39 +400,78 @@
             const originalY = window.scrollY;
             window.scrollTo(0, 0);
 
-            html2canvas(document.body, { 
-                scale: 2,
-                useCORS: true,
-                windowWidth: document.documentElement.offsetWidth,
-                windowHeight: document.documentElement.scrollHeight
-            }).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                
-                let position = 0;
-                let heightLeft = pdfHeight;
-                const pageHeight = pdf.internal.pageSize.getHeight();
-
-                while (heightLeft > 0) {
-                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
-                    heightLeft -= pageHeight;
-                    position -= pageHeight;
-                    if (heightLeft > 0) {
-                        pdf.addPage();
+            // Aguardar um pouco para garantir que o scroll foi aplicado
+            setTimeout(() => {
+                html2canvas(document.body, { 
+                    scale: 1.5,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#f7f9fb',
+                    width: document.documentElement.scrollWidth,
+                    height: document.documentElement.scrollHeight,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: window.innerWidth,
+                    windowHeight: window.innerHeight
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png', 1.0);
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    
+                    // Margens do PDF
+                    const margin = 10;
+                    const pdfWidth = pdf.internal.pageSize.getWidth() - (margin * 2);
+                    const pdfHeight = pdf.internal.pageSize.getHeight() - (margin * 2);
+                    
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const imgWidth = pdfWidth;
+                    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+                    
+                    // Se a imagem for muito alta, dividir em páginas
+                    if (imgHeight > pdfHeight) {
+                        const totalPages = Math.ceil(imgHeight / pdfHeight);
+                        let yPosition = 0;
+                        
+                        for (let i = 0; i < totalPages; i++) {
+                            if (i > 0) {
+                                pdf.addPage();
+                            }
+                            
+                            const sourceY = i * (imgProps.height / totalPages);
+                            const sourceHeight = imgProps.height / totalPages;
+                            
+                            // Criar um canvas temporário para cada página
+                            const tempCanvas = document.createElement('canvas');
+                            const tempCtx = tempCanvas.getContext('2d');
+                            tempCanvas.width = imgProps.width;
+                            tempCanvas.height = sourceHeight;
+                            
+                            // Desenhar a parte da imagem correspondente à página
+                            tempCtx.drawImage(canvas, 0, sourceY, imgProps.width, sourceHeight, 0, 0, imgProps.width, sourceHeight);
+                            
+                            const pageImgData = tempCanvas.toDataURL('image/png', 1.0);
+                            pdf.addImage(pageImgData, 'PNG', margin, margin, imgWidth, imgHeight);
+                        }
+                    } else {
+                        // Se a imagem couber em uma página
+                        pdf.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
                     }
-                }
 
-                pdf.save('infografico-curriculo.pdf');
-                
-                window.scrollTo(0, originalY);
-                button.disabled = false;
-                buttonText.textContent = 'Salvar como PDF';
-                loader.classList.add('hidden');
-            });
+                    pdf.save('infografico-curriculo.pdf');
+                    
+                    window.scrollTo(0, originalY);
+                    button.disabled = false;
+                    buttonText.textContent = 'Salvar como PDF';
+                    loader.classList.add('hidden');
+                }).catch(error => {
+                    console.error('Erro ao gerar PDF:', error);
+                    window.scrollTo(0, originalY);
+                    button.disabled = false;
+                    buttonText.textContent = 'Salvar como PDF';
+                    loader.classList.add('hidden');
+                    alert('Erro ao gerar PDF. Tente novamente.');
+                });
+            }, 100);
         });
     </script>
 </body>
