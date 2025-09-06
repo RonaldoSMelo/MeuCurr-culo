@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infográfico do Currículo - Ronaldo da Silva Melo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #00a0b0;
+            border: 4px solid #f7f9fb;
+            top: 0px;
+            left: -10px;
+            z-index: 1;
+        }
+        .icon {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #4d8fac;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+        <div class="flex justify-end mb-4">
+            <button id="downloadPdfBtn" class="flex items-center space-x-2 bg-[#003f5c] text-white font-bold py-2 px-4 rounded-lg hover:bg-[#4d8fac] transition-colors">
+                <span id="buttonText">Salvar como PDF</span>
+                <div id="loader" class="loader hidden"></div>
+            </button>
+        </div>
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-black text-[#003f5c] mb-2">Ronaldo da Silva Melo</h1>
+            <h2 class="text-2xl font-bold text-[#4d8fac]">Analista de Desenvolvimento Sênior</h2>
+            <p class="max-w-4xl mx-auto mt-4 text-lg text-gray-600">
+                Especialista em desenvolvimento de soluções corporativas com mais de 13 anos de experiência, unindo expertise em Flutter, Inteligência Artificial, Machine Learning, Business Intelligence (Power BI) e automação de processos com n8n.
+            </p>
+        </header>
+
+        <main id="infographicContent" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            <div class="lg:col-span-3 bg-white rounded-lg shadow-md p-6">
+                 <h3 class="text-2xl font-bold text-[#003f5c] mb-4 text-center">Principais Áreas de Expertise</h3>
+                 <p class="text-center text-gray-600 mb-6">Este gráfico de radar ilustra a profundidade da experiência em domínios tecnológicos chave, demonstrando uma proficiência equilibrada e robusta, essencial para o desenvolvimento de soluções complexas e integradas.</p>
+                 <div class="chart-container h-96 md:h-[500px]">
+                    <canvas id="expertiseRadarChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="md:col-span-2 lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Proficiência em Linguagens de Programação</h3>
+                <p class="text-gray-600 mb-6">A proficiência em múltiplas linguagens de programação permite a seleção da ferramenta mais adequada para cada desafio técnico. Este gráfico de barras destaca as linguagens com maior domínio e aplicação em projetos recentes.</p>
+                <div class="chart-container h-96 md:h-[400px]">
+                    <canvas id="languagesBarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Frameworks e Bancos de Dados</h3>
+                <p class="text-gray-600 mb-6">A experiência abrange uma vasta gama de tecnologias modernas, essenciais para a construção de aplicações robustas e escaláveis.</p>
+                <div class="flex-grow space-y-4">
+                    <div class="text-center">
+                        <p class="icon">📱</p>
+                        <h4 class="font-bold text-lg text-[#003f5c]">Mobile & Frameworks</h4>
+                        <p class="text-gray-600">Flutter, Dart, React, LangChain, CrewAI, N8N</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="icon">💾</p>
+                        <h4 class="font-bold text-lg text-[#003f5c]">Bancos de Dados</h4>
+                        <p class="text-gray-600">Oracle, SQL Server, PostgreSQL, MongoDB, Firebase</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-[#003f5c] mb-8 text-center">Jornada Profissional</h3>
+                <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Uma carreira marcada pela evolução contínua, transitando da área de vendas para a tecnologia e consolidando mais de uma década de experiência em desenvolvimento de software e análise de sistemas em posições de crescente responsabilidade.</p>
+                <div class="relative pl-10 border-l-4 border-[#00a0b0]">
+                    <div class="mb-12 timeline-item">
+                        <h4 class="font-bold text-xl text-[#003f5c]">Analista de Desenvolvimento Sênior</h4>
+                        <p class="font-semibold text-[#4d8fac]">Compusoftware (2011 - Presente)</p>
+                        <p class="text-gray-600 mt-2">Liderando o desenvolvimento de soluções de gestão empresarial, com foco em Power BI, Flutter e IA.</p>
+                    </div>
+                    <div class="mb-12 timeline-item">
+                        <h4 class="font-bold text-xl text-[#003f5c]">Analista de Sistemas</h4>
+                        <p class="font-semibold text-[#4d8fac]">Assessor Público (2009 - 2011)</p>
+                        <p class="text-gray-600 mt-2">Desenvolvimento de sistemas para o setor público, lidando com requisitos governamentais complexos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4 class="font-bold text-xl text-[#003f5c]">Analista de Vendas</h4>
+                        <p class="font-semibold text-[#4d8fac]">F'NA E-OURO (2005 - 2009)</p>
+                        <p class="text-gray-600 mt-2">Análise de mercado e desenvolvimento de estratégias de vendas para franquias.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Distribuição de Projetos Recentes</h3>
+                 <p class="text-gray-600 mb-6">Os projetos mais recentes refletem um foco estratégico em áreas de alta demanda e inovação. Este gráfico mostra a distribuição do esforço e especialização entre Inteligência Artificial, Desenvolvimento Mobile e Business Intelligence.</p>
+                <div class="chart-container h-80">
+                    <canvas id="projectsDonutChart"></canvas>
+                </div>
+            </div>
+
+            <div class="md:col-span-1 lg:col-span-2 bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Projetos em Destaque</h3>
+                <p class="text-gray-600 mb-6">Uma seleção de projetos que demonstram a aplicação prática de habilidades avançadas para resolver problemas de negócios complexos e impulsionar a inovação.</p>
+                <div class="space-y-4">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-bold text-lg text-[#003f5c]">Agente de IA com RAG</h4>
+                        <p class="text-gray-600">Implementação de um sistema de perguntas e respostas usando LangChain para análise inteligente de documentos.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-bold text-lg text-[#003f5c]">Apps Corporativos em Flutter</h4>
+                        <p class="text-gray-600">Desenvolvimento de aplicações móveis multiplataforma para otimizar a gestão e operações empresariais.</p>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-bold text-lg text-[#003f5c]">Automação com N8N</h4>
+                        <p class="text-gray-600">Criação de workflows automatizados para integrar sistemas e otimizar processos de negócio.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Metodologias e Soft Skills</h3>
+                    <p class="text-gray-600 mb-6">A base para o sucesso de qualquer projeto não é apenas técnica, mas também metodológica e interpessoal.</p>
+                    <ul class="space-y-2">
+                        <li class="flex items-center"><span class="text-[#00a0b0] mr-2">✓</span> Liderança e Trabalho em Equipe</li>
+                        <li class="flex items-center"><span class="text-[#00a0b0] mr-2">✓</span> Metodologias Ágeis (Scrum, Kanban)</li>
+                        <li class="flex items-center"><span class="text-[#00a0b0] mr-2">✓</span> Resolução de Problemas Complexos</li>
+                        <li class="flex items-center"><span class="text-[#00a0b0] mr-2">✓</span> Comunicação e Análise Crítica</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-6 text-center flex flex-col justify-center items-center">
+                    <h3 class="text-2xl font-bold text-[#003f5c] mb-4">Conecte-se</h3>
+                    <p class="text-gray-600 mb-6">Explore 31 projetos ativos e contribuições no GitHub.</p>
+                    <a href="https://github.com/RonaldoSMelo" target="_blank" class="bg-[#003f5c] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#4d8fac] transition-colors">
+                        Visitar GitHub
+                    </a>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script>
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                              return label.join(' ');
+                            } else {
+                              return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const chartColors = {
+            blueDark: '#003f5c',
+            blueMid: '#4d8fac',
+            teal: '#00a0b0',
+            gray: '#a3a1a6',
+            light: '#e0cfca'
+        };
+
+        const expertiseRadarCtx = document.getElementById('expertiseRadarChart').getContext('2d');
+        new Chart(expertiseRadarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Flutter', ['Inteligência', 'Artificial'], ['Business', 'Intelligence'], 'Bancos de Dados', 'Automação'],
+                datasets: [{
+                    label: 'Nível de Expertise',
+                    data: [9, 8, 9, 8, 7],
+                    backgroundColor: 'rgba(0, 160, 176, 0.2)',
+                    borderColor: chartColors.teal,
+                    pointBackgroundColor: chartColors.teal,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: chartColors.teal,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                ...tooltipTitleCallback,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        pointLabels: { font: { size: 14 } },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                     ...tooltipTitleCallback.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const languagesBarCtx = document.getElementById('languagesBarChart').getContext('2d');
+        new Chart(languagesBarCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Dart', 'Python', 'SQL', 'Apex', 'C#', 'JavaScript'],
+                datasets: [{
+                    label: 'Proficiência',
+                    data: [95, 85, 90, 80, 75, 70],
+                    backgroundColor: [
+                        chartColors.blueDark,
+                        chartColors.blueMid,
+                        chartColors.teal,
+                        chartColors.gray,
+                        '#6B7B8B',
+                        '#8A888C'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                ...tooltipTitleCallback,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { display: false },
+                        ticks: {
+                            callback: function(value) { return value + "%" }
+                        }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                     ...tooltipTitleCallback.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const projectsDonutCtx = document.getElementById('projectsDonutChart').getContext('2d');
+        new Chart(projectsDonutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['IA & Machine Learning', 'Desenvolvimento Mobile', 'BI & Automação'],
+                datasets: [{
+                    label: 'Distribuição de Projetos',
+                    data: [40, 35, 25],
+                    backgroundColor: [
+                        chartColors.blueDark,
+                        chartColors.teal,
+                        chartColors.blueMid
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                ...tooltipTitleCallback,
+                plugins: {
+                    ...tooltipTitleCallback.plugins,
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+
+        document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+            const buttonText = document.getElementById('buttonText');
+            const loader = document.getElementById('loader');
+            const button = document.getElementById('downloadPdfBtn');
+            
+            button.disabled = true;
+            buttonText.textContent = '';
+            loader.classList.remove('hidden');
+
+            const content = document.getElementById('infographicContent');
+
+            const originalY = window.scrollY;
+            window.scrollTo(0, 0);
+
+            html2canvas(document.body, { 
+                scale: 2,
+                useCORS: true,
+                windowWidth: document.documentElement.offsetWidth,
+                windowHeight: document.documentElement.scrollHeight
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const imgProps = pdf.getImageProperties(imgData);
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                
+                let position = 0;
+                let heightLeft = pdfHeight;
+                const pageHeight = pdf.internal.pageSize.getHeight();
+
+                while (heightLeft > 0) {
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+                    heightLeft -= pageHeight;
+                    position -= pageHeight;
+                    if (heightLeft > 0) {
+                        pdf.addPage();
+                    }
+                }
+
+                pdf.save('infografico-curriculo.pdf');
+                
+                window.scrollTo(0, originalY);
+                button.disabled = false;
+                buttonText.textContent = 'Salvar como PDF';
+                loader.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
