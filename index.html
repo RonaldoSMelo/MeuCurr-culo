@@ -58,6 +58,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+        }
+        @media print {
+            .page-break {
+                page-break-before: always;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-800">
@@ -122,7 +131,7 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-3 bg-white rounded-lg shadow-md p-6">
+            <div class="lg:col-span-3 bg-white rounded-lg shadow-md p-6 page-break">
                 <h3 class="text-2xl font-bold text-[#003f5c] mb-8 text-center">Jornada Profissional</h3>
                 <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">Uma carreira marcada pela evolução contínua, transitando da área de vendas para a tecnologia e consolidando mais de uma década de experiência em desenvolvimento de software e análise de sistemas em posições de crescente responsabilidade.</p>
                 <div class="relative pl-10 border-l-4 border-[#00a0b0]">
