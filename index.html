@@ -230,13 +230,16 @@
                 datasets: [{
                     label: 'Nível de Expertise',
                     data: [9, 8, 9, 8, 7],
-                    backgroundColor: 'rgba(0, 160, 176, 0.2)',
+                    backgroundColor: 'rgba(0, 160, 176, 0.15)',
                     borderColor: chartColors.teal,
                     pointBackgroundColor: chartColors.teal,
                     pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: chartColors.teal,
-                    borderWidth: 2
+                    pointHoverBackgroundColor: chartColors.blueDark,
+                    pointHoverBorderColor: '#fff',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    borderWidth: 3,
+                    tension: 0.1
                 }]
             },
             options: {
@@ -245,17 +248,65 @@
                 ...tooltipTitleCallback,
                 scales: {
                     r: {
-                        angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                        pointLabels: { font: { size: 14 } },
+                        angleLines: { 
+                            color: 'rgba(0, 0, 0, 0.15)',
+                            lineWidth: 1.5
+                        },
+                        grid: { 
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            lineWidth: 1
+                        },
+                        pointLabels: { 
+                            font: { 
+                                size: 14,
+                                weight: 'bold',
+                                family: 'Inter'
+                            },
+                            color: chartColors.blueDark,
+                            padding: 15
+                        },
                         suggestedMin: 0,
-                        suggestedMax: 10
+                        suggestedMax: 10,
+                        ticks: {
+                            display: true,
+                            font: {
+                                size: 12,
+                                family: 'Inter'
+                            },
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            stepSize: 2,
+                            callback: function(value) {
+                                return value + '/10';
+                            }
+                        }
                     }
                 },
                 plugins: {
-                     ...tooltipTitleCallback.plugins,
+                    ...tooltipTitleCallback.plugins,
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 63, 92, 0.9)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: chartColors.teal,
+                        borderWidth: 2,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed.r;
+                                const percentage = (value / 10) * 100;
+                                return `Nível: ${value}/10 (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                elements: {
+                    line: {
+                        borderJoinStyle: 'round',
+                        borderCapStyle: 'round'
                     }
                 }
             }
